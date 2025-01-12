@@ -9,7 +9,7 @@
     <h1>Prendre une photo et obtenir les coordonnées GPS</h1>
 
     <!-- Affichage de la vidéo de la webcam -->
-    <video id="video" autoplay playsinline style="width: 100%; max-width: 500px;"></video>
+    <video id="video" autoplay playsinline style="width: 100%; max-width: 500px; max-height: 300px;"></video>
 
     <!-- Bouton pour capturer la photo -->
     <button id="capture">Capturer la photo</button>
@@ -29,11 +29,8 @@
         const output = document.getElementById('output');
 
         // Demander l'accès à la webcam
-        navigator.mediaDevices.getUserMedia({
-            video: {
-                facingMode: {exact: "environment"}
-            }
-    })
+        navigator.mediaDevices.getUserMedia(
+            { video: { facingMode: {exact: "environment"} }})
             .then(stream => {
                 video.srcObject = stream;
             })
