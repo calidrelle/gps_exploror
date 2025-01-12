@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigation avec Leaflet</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Initialisation de la carte
+    const map = L.map('map').setView([48.8566, 2.3522], 13); // Paris par défaut
+
+    // Ajout d'une couche de tuiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Destination (ajout d'un marqueur)
+    const destination = [48.858844, 2.294351]; // Tour Eiffel
+    const destinationMarker = L.marker(destination).addTo(map).bindPopup('Destination : Tour Eiffel');
+
+    // Suivi de la position actuelle
+    function onLocationFound(e) {
+      const radius = e.accuracy / 2;
+      const userMarker = L.marker(e.latlng).addTo(map).bindPopup("Vous êtes ici.");
+      L.circle(e.latlng, radius).addTo(map);
+
+      // Calcul de la distance à la destination
+      const distance = map.distance(e.latlng, destination);
+      console.log(`Distance à la destination : ${(distance / 1000).toFixed(2)} km`);
+    }
+
+    function onLocationError(e) {
+      alert(`Erreur de localisation : ${e.message}`);
+    }
+
+    // Activer la localisation
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+    map.locate({ watch: true, setView: true, maxZoom: 16 });
+
+
+
+  </script>
+</body>
+</html>

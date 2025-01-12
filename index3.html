@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo avec GPS</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        video, canvas { max-width: 100%; margin: 10px 0; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Prendre une photo avec vos coordonnées GPS</h1>
+
+    <!-- Vidéo de prévisualisation -->
+    <video id="video" autoplay></video>
+
+    <!-- Bouton de capture -->
+    <button id="capture">Prendre la photo</button>
+
+    <!-- Canvas où la photo sera affichée -->
+    <canvas id="canvas"></canvas>
+
+    <!-- Formulaire invisible pour stocker les données -->
+    <form id="photoForm" method="POST" action="upload.php" style="display:none;">
+        <input type="hidden" id="photoData" name="photoData">
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
+    </form>
+
+    <!-- Script principal -->
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const photoData = document.getElementById('photoData');
+        const latitudeInput = document.getElementById('latitude');
+        const longitudeInput = document.getElementById('longitude');
+        const photoForm = document.getElementById('photoForm');
+
+        // Activer la caméra
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                video.srcObject = stream;
+            })
+            .catch((err) => {
+                alert("Impossible d'accéder à la caméra : " + err.message);
+            });
+
+        // Récupérer les coordonnées GPS
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    latitudeInput.value = position.coords.latitude;
+                    longitudeInput.value = position.coords.longitude;
+                },
+                (err) => {
+                    alert("Erreur GPS : " + err.message);
+                }
+            );
+        } else {
+            alert("La géolocalisation n'est pas supportée par ce navigateur.");
+        }
+
+        // Capturer la photo dans le canvas
+        document.getElementById('capture').addEventListener('click', () => {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Encoder la photo en Base64
+            const imageData = canvas.toDataURL('image/jpeg');
+            photoData.value = imageData;
+
+            // Envoyer automatiquement le formulaire
+            photoForm.submit();
+        });
+    </script>
+</body>
+</html>
