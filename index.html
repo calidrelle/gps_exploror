@@ -6,7 +6,7 @@
     <title>Prendre une photo avec GPS</title>
 </head>
 <body>
-    <h1>Prendre une photo avec la webcam et obtenir les coordonnées GPS</h1>
+    <h1>Prendre une photo et obtenir les coordonnées GPS</h1>
 
     <!-- Affichage de la vidéo de la webcam -->
     <video id="video" autoplay playsinline style="width: 100%; max-width: 500px;"></video>
@@ -29,11 +29,15 @@
         const output = document.getElementById('output');
 
         // Demander l'accès à la webcam
-        navigator.mediaDevices.getUserMedia({ video: true })
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: {exact: "environment"}
+            }
+    })
             .then(stream => {
                 video.srcObject = stream;
             })
-            .catch(err => console.error('Erreur d’accès à la webcam :', err));
+            .catch(err => console.error("Erreur d'accès à la webcam :", err));
 
         // Fonction pour obtenir les coordonnées GPS
         function getGPSCoordinates() {
