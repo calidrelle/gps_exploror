@@ -15,8 +15,14 @@ body {
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
+    width: 100%;
 }
 
 .canvas-bordered {
     border: 2px solid #4CAF50;
+}
+
+.video-style {
+    width: 100%;
+    height: 300px;
 }
