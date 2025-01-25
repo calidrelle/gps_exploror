@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prendre une photo avec GPS</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Prendre une photo et obtenir les coordonnées GPS</h1>
+    <h1>GPS Explorer</h1>
 
     <!-- Affichage de la vidéo de la webcam -->
-    <video id="video" autoplay playsinline style="width: 100%; max-width: 500px; max-height: 300px;"></video>
+    <video id="video" autoplay playsinline class="canvas-bordered" style="width: 100%; max-width: 500px; max-height: 300px;"></video>
 
     <!-- Bouton pour capturer la photo -->
-    <button id="capture">Capturer la photo</button>
+    <button id="capture" class="button">Capturer la photo</button>
 
     <!-- Zone d'affichage de l'image capturée -->
     <canvas id="canvas" style="display: none;"></canvas>
@@ -29,10 +30,10 @@
         const output = document.getElementById('output');
 
         // Demander l'accès à la webcam
-        navigator.mediaDevices.getUserMedia(
-            { video: { facingMode: {exact: "environment"} }})
+        navigator.mediaDevices.getUserMedia(            { video: { facingMode: {exact: "environment"} }})
             .then(stream => {
                 video.srcObject = stream;
+                console.log('Accès à la webcam autorisé.');
             })
             .catch(err => console.error("Erreur d'accès à la webcam :", err));
 
